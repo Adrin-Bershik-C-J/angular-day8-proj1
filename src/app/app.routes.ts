@@ -5,6 +5,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { UnauthorizedComponent } from './unauthorized.component';
 import { BugDetailComponent } from './bug-detail.component';
+import { AdminDashboardComponent } from './admin-dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'bugs', pathMatch: 'full' },
@@ -15,6 +16,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard('ADMIN')],
   },
   { path: 'bug-detail/:id', component: BugDetailComponent },
+  {
+    path: 'dashboard',
+    component: AdminDashboardComponent,
+    canActivate: [AuthGuard, RoleGuard('ADMIN')],
+   },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', redirectTo: 'bugs' },
 ];
