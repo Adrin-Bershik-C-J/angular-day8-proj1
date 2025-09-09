@@ -1,0 +1,145 @@
+<div class="container">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <h2>Bug Tracker</h2>
+    <button class="logout-btn" (click)="onLogout()">Logout</button>
+  </div>
+
+  <!-- Bug Form -->
+  <div class="bug-form">
+    <h3>{{ editingBugId ? "Edit Bug" : "Create New Bug" }}</h3>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Title</label>
+        <input [(ngModel)]="newBug.title" placeholder="Enter bug title" />
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select [(ngModel)]="newBug.status">
+          <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Priority</label>
+        <select [(ngModel)]="newBug.priority">
+          <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Assignee</label>
+        <input
+          [(ngModel)]="newBug.assignee"
+          placeholder="Enter assignee name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Project</label>
+        <input [(ngModel)]="newBug.project" placeholder="Enter project name" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" (click)="saveBug()">
+        {{ editingBugId ? "Update Bug" : "Create Bug" }}
+      </button>
+      <button class="btn btn-secondary" (click)="resetForm()" type="button">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label>Filter by Status</label>
+        <select [(ngModel)]="selectedStatus" (change)="filterBugs()">
+          <option value="">All Statuses</option>
+          <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Filter by Priority</label>
+        <select [(ngModel)]="selectedPriority" (change)="filterBugs()">
+          <option value="">All Priorities</option>
+          <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
+        </select>
+      </div>
+
+      <button class="clear-btn" (click)="clearFilters()" type="button">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Container -->
+  <div class="table-container">
+    <table class="bug-table" *ngIf="filteredBugs?.length; else emptyState">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Priority</th>
+          <th>Assignee</th>
+          <th>Project</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let bug of filteredBugs; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ bug.title }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="statusClass(bug.status)">
+              {{ bug.status }}
+            </span>
+          </td>
+          <td>
+            <span class="priority-badge" [ngClass]="bug.priority.toLowerCase()">
+              {{ bug.priority }}
+            </span>
+          </td>
+          <td>{{ bug.assignee || "-" }}</td>
+          <td>{{ bug.project || "-" }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-edit" (click)="editBug(bug)">Edit</button>
+              <button class="btn-delete" (click)="deleteBugById(bug.id)">
+                Delete
+              </button>
+            </div>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-edit" (click)="editBug(bug)">Edit</button>
+              <button class="btn-delete" (click)="deleteBugById(bug.id)">
+                Delete
+              </button>
+              <button class="btn-view" (click)="viewBugDetails(bug.id)">
+                View Details
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <p>No bugs found. Create your first bug report above.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+</div>
