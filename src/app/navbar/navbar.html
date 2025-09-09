@@ -1,0 +1,12 @@
+<nav class="navbar">
+  <a routerLink="/bugs" routerLinkActive="active">Bugs</a>
+  <a routerLink="/dashboard" routerLinkActive="active" *ngIf="authService.hasRole('ADMIN')">Dashboard</a>
+  
+  <span class="spacer"></span>
+
+  <span *ngIf="authService.isLoggedIn()">
+    Welcome, {{ authService.currentUser?.name }}!
+    <button (click)="logout()">Logout</button>
+  </span>
+  <a routerLink="/login" *ngIf="!authService.isLoggedIn()">Login</a>
+</nav>
